@@ -1,0 +1,14 @@
+[
+ {"thread_id":"1a1a1a1a1a1a1a1a","messages":[
+   {"from":"Ophelia Careers <no-reply@ophelia.com>","to":"you@example.com",
+    "subject":"Your application to Ophelia","date":"2026-07-20",
+    "body":"Hi there, thank you for your interest in the Software Engineer II role at Ophelia. After careful review we have decided to move forward with other candidates whose experience more closely matches our needs. We appreciate the time you invested."}]},
+ {"thread_id":"2b2b2b2b2b2b2b2b","messages":[
+   {"from":"Vercel Recruiting <careers@vercel.com>","to":"you@example.com",
+    "subject":"We received your application - Senior Frontend Engineer (REQ-4412)","date":"2026-07-22",
+    "body":"Thanks for applying to the Senior Frontend Engineer position (REQ-4412) at Vercel. Our team is reviewing applications and will be in touch."}]},
+ {"thread_id":"3c3c3c3c3c3c3c3c","messages":[
+   {"from":"LinkedIn <jobs-noreply@linkedin.com>","to":"you@example.com",
+    "subject":"30 new jobs for Software Engineer in Seattle","date":"2026-07-23",
+    "body":"Jobs you may be interested in this week. Apply now to these openings near you."}]}
+]

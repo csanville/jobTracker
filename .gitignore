@@ -1,0 +1,108 @@
+# ---------------------------------------------------------------------------
+# Personal data — the tracker's actual contents. Never commit these.
+# ---------------------------------------------------------------------------
+
+# The tracker workbook itself (real companies, roles, salaries, notes) and the
+# Excel lock file that appears while it is open.
+*.xlsx
+*.xlsm
+~$*
+
+# Timestamped copies of the workbook written before every sync.
+backups/
+
+# Generated dashboard: a self-contained HTML file with every application in it.
+dashboard.html
+
+# Run logs and the raw Claude classification transcripts, which quote email
+# subjects, bodies, company names, and Gmail thread ids.
+logs/
+
+# Sync watermark (when the mailbox was last read).
+state/
+
+# ---------------------------------------------------------------------------
+# Credentials and configuration
+# ---------------------------------------------------------------------------
+
+# Holds the Gmail address, and historically an "app_password" line. The app
+# password now lives in the OS credential vault; see config.example.json.
+config.json
+
+# Anything else that could carry a secret.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+client_secret*.json
+token.json
+token*.pickle
+service-account*.json
+.netrc
+*_rsa
+*_ed25519
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test / type / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.hypothesis/
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Local agent / tooling state
+# ---------------------------------------------------------------------------
+.claude/settings.local.json
