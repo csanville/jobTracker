@@ -1,6 +1,7 @@
 """Shared paths, config, and logging for the job tracker automation."""
 from __future__ import annotations
 
+import calendar
 import datetime as dt
 import json
 import logging
@@ -24,6 +25,10 @@ CLOSED_STATUSES = {
     "Ghosted (Post-Engagement)",
     "No Response (6mo+, Application Stage)",
 }
+
+# An "Awaiting Response" application with no activity for this many calendar
+# months is closed out as Rejected on every sync.
+STALE_AFTER_MONTHS = 5
 
 # Ordered funnel stages, furthest-reached wins. Used by the dashboard.
 FUNNEL_STAGES = [
@@ -178,6 +183,14 @@ def parse_since(value: str | None, default_days: int = 14) -> dt.date:
         except (json.JSONDecodeError, ValueError):
             pass
     return dt.date.today() - dt.timedelta(days=default_days)
+
+
+def months_ago(months: int, today: dt.date | None = None) -> dt.date:
+    """The same day-of-month `months` calendar months back, clamped to month end."""
+    today = today or dt.date.today()
+    year, month0 = divmod(today.year * 12 + today.month - 1 - months, 12)
+    day = min(today.day, calendar.monthrange(year, month0 + 1)[1])
+    return dt.date(year, month0 + 1, day)
 
 
 def save_watermark(when: dt.date | None = None) -> None:

@@ -32,7 +32,7 @@ def main() -> int:
     from dashboard import build as build_dashboard  # noqa: E402
     from gmail_fetch import fetch_candidates  # noqa: E402
     from workbook import (  # noqa: E402
-        apply_decisions, backup, known_thread_keys, open_workbook,
+        apply_decisions, backup, expire_stale, known_thread_keys, open_workbook,
         read_applications, read_lists, regenerate_active_pipeline,
         regenerate_company_history,
     )
@@ -60,13 +60,13 @@ def main() -> int:
             decisions = classify(threads, apps, lists, logger)
             if args.dry_run:
                 print(json.dumps(decisions, indent=2))
-                logger.info("dry run: nothing written")
-                return 0
-            summary = apply_decisions(wb, decisions, logger)
+            else:
+                summary = apply_decisions(wb, decisions, logger)
         else:
             logger.info("no new candidate threads")
-            if args.dry_run:
-                return 0
+
+    # After this run's mail is applied, so a reply that just arrived keeps a row open.
+    expired = expire_stale(wb, logger)
 
     if args.dry_run:
         logger.info("dry run: nothing written")
@@ -79,7 +79,7 @@ def main() -> int:
     n_companies = regenerate_company_history(wb)
     wb.save(path)
     logger.info(f"workbook saved: +{summary['added']} new, {summary['updated']} updated, "
-                f"{summary['skipped']} skipped | Active Pipeline {n_active} rows, "
+                f"{summary['skipped']} skipped, {expired} expired | Active Pipeline {n_active} rows, "
                 f"Company History {n_companies} rows")
 
     wb2 = open_workbook(path)

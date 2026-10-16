@@ -15,7 +15,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
-from common import BACKUPS, CLOSED_STATUSES, thread_key
+from common import BACKUPS, CLOSED_STATUSES, STALE_AFTER_MONTHS, months_ago, thread_key
 
 APPLICATIONS = "Applications"
 ACTIVE_PIPELINE = "Active Pipeline"
@@ -222,6 +222,30 @@ def apply_decisions(wb, decisions: list[dict], logger) -> dict:
             logger.info(f"  add {app_id}: {company} - {d.get('role')} [{d.get('status')}]")
 
     return {"added": added, "updated": updated, "skipped": skipped}
+
+
+def expire_stale(wb, logger, today: dt.date | None = None) -> int:
+    """Close Awaiting Response rows with no activity for STALE_AFTER_MONTHS.
+
+    Measured from Last Activity Date, falling back to Date Applied, so any
+    acknowledgement or follow-up restarts the clock. Returns the number closed.
+    """
+    ws = wb[APPLICATIONS]
+    cutoff = months_ago(STALE_AFTER_MONTHS, today)
+    detail = f"No response after {STALE_AFTER_MONTHS} months (auto-closed)"
+    expired = 0
+    for a in read_applications(wb):
+        if a["status"] != "Awaiting Response":
+            continue
+        last = a["last_activity_date"] or a["date_applied"]
+        if not last or last > cutoff:
+            continue
+        r = a["row"]
+        ws[f"H{r}"] = "Rejected"
+        ws[f"I{r}"] = detail
+        expired += 1
+        logger.info(f"  expire {a['app_id']}: {a['company']} (no activity since {last})")
+    return expired
 
 
 def regenerate_active_pipeline(wb) -> int:
